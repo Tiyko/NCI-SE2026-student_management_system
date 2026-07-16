@@ -1,7 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container">
-        <h1 class="colorreds display-2">Booking Page!</h1>
-        <p class="lead">To manage all sort of events!</p>
+    <div class="container py-5">
+        <div class="text-center mb-5">
+        <h1 class="colorreds display-2">Book Your Event</h1>
+            Browse event details and your ticket.
+
+        </p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Basketball Tournament</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Date:</strong> 20 August 2026</p>
+                    <p><strong>Time:</strong> 10:00</p>
+                    <p><strong>Location:</strong> National College of Ireland</p>
+
+                    <p>
+                        Join our existing basketball tournament and compete against students from different courses.
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        <strong>Tickets Remaining:</strong>
+                        <span class="badge bg-success">
+                            24 Available
+                        </span>
+
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Number of Tickets
+                                </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                min="1"
+                                max="5"
+                                value="1">
+                        </div>
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100">
+                                    
+                            Book Ticket
+
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
