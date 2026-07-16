@@ -1,0 +1,12 @@
+
+/* GLOBAL SETTINGS */
+
+/* hide the auto-generated password helptext link in allauth login form */
+.auth-card .helptext {
+    display: none !important;
+}
+
+.colorreds {
+    color: red;
+    text-decoration: underline;
+}
