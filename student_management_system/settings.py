@@ -10,23 +10,56 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+
+#   Edited by:
+#   Ionut Ciobanu
+#
+
+
 from pathlib import Path
+import os
+from decouple import config
+import dj_database_url
+from django.contrib.messages import constants as messages
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g_h2+u8mj#!8a-l4g3-6ks_b0iqwl723w@cz*hx1#9myb6+(b!'
-
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+development = config('DEV_MODE', default=False, cast=bool)
 
+# Use a local secret key fallback in development. In production, SECRET_KEY must be set.
+if development:
+    SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-secret')
+else:
+    SECRET_KEY = config('SECRET_KEY')
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+
+DEBUG = development
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# Allow all hosts in development, restrict to specific host in production
+if development:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    CSRF_TRUSTED_ORIGINS = [
+        'http://127.0.0.1',
+        'http://localhost'
+    ]
+    CSRF_COOKIE_DOMAIN = [
+        '127.0.0.1'
+    ]
+else:
+    ALLOWED_HOSTS = [config('HOSTNAME')]
+    CSRF_TRUSTED_ORIGINS = [config('HOSTNAME')]
+    CSRF_COOKIE_DOMAIN = [config('HOSTNAME')]
 
 # Application definition
 
@@ -37,7 +70,43 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+    'django.contrib.sites',  # Required for django-allauth social authentication
+    'django_summernote',  # Rich text editor for admin
+    'allauth',  # authentication and login/logout system
+    'allauth.account',  # account management
+    'allauth.socialaccount',  # social account integration
+    'crispy_forms',  # for better form rendering
+    ]
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-info',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+    }
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# AllAuth Configuration
+# https://django-allauth.readthedocs.io/en/latest/
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}  # Allow login with username or email
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_SESSION_REMEMBER = True  # Remember user for 1 week
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
+
+# Crispy Forms Configuration
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,6 +116,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # Required for django-allauth
 ]
 
 ROOT_URLCONF = 'student_management_system.urls'
@@ -58,6 +128,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -66,18 +137,39 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Default Django authentication
+    'django.contrib.auth.backends.ModelBackend',
+
+    # allauth authentication
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
 WSGI_APPLICATION = 'student_management_system.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+#   Use SQLite in development and PostgreSQL in production
+if development:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    # In production, DATABASE_URL must be set in the environment variables
+    # env-var (enviroment variable) has to be set in .env file.
+    # Here we choose  database URL from Amazon or w/e we go for
+    DATABASE_URL = config('DATABASE_URL', default=None)
+    if not DATABASE_URL:
+        raise ValueError("DATABASE_URL is not set in the environment variables.")
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
 
 
 # Password validation
@@ -115,3 +207,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
