@@ -1,5 +1,5 @@
 """
-URL configuration for student_management_system project.
+URL configuration for Student Management System project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/
@@ -15,13 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
-from django.urls import path, include
-# from django.conf import settings
-# from django.conf.urls.static import static
+#   Edited by:
+#   Ionut Ciobanu
+#
+
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    path('', include('homepage.urls'), name='homepage.urls'),
+    path('', views.index, name='home')
 ]

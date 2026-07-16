@@ -44,6 +44,19 @@ else:
 
 DEBUG = development
 
+# Email settings
+# In development, use the console backend so email actions do not require a running SMTP server.
+if development:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+    EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Allow all hosts in development, restrict to specific host in production
@@ -82,12 +95,21 @@ INSTALLED_APPS = [
     'allauth.account',  # account management
     'allauth.socialaccount',  # social account integration
     'crispy_forms',  # for better form rendering
+    'homepage',  # add homepage app
     ]
+
+ACCOUNT_FORMS = {
+    "login": "forms.CustomLoginForm",
+}
 
 SITE_ID = 1
 
+# Redirect URLs after login/logout/signup
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-info',
@@ -111,8 +133,8 @@ ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
 
 # Crispy Forms Configuration
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -131,7 +153,7 @@ ROOT_URLCONF = 'student_management_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -219,7 +241,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
     'default': {
