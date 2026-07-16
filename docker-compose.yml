@@ -1,0 +1,24 @@
+#   Edited by:
+#   Ionut Ciobanu
+#   Michal Pokojny //13/07/26
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: student_management_system
+    entrypoint: ["/app/entrypoint.sh"]
+    command: ["gunicorn", "student_management_system.wsgi:application", "--bind", "0.0.0.0:8080"]
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEV_MODE=False
+      - DEBUG=False
+    volumes:
+      - .:/app
+    working_dir: /app
+    restart: unless-stopped
