@@ -57,9 +57,15 @@ if development:
         '127.0.0.1'
     ]
 else:
-    ALLOWED_HOSTS = [config('HOSTNAME')]
-    CSRF_TRUSTED_ORIGINS = [config('HOSTNAME')]
-    CSRF_COOKIE_DOMAIN = [config('HOSTNAME')]
+    app_hostname = config('APP_HOSTNAME', default='localhost')
+    csrf_trusted_origin = config(
+        'CSRF_TRUSTED_ORIGIN',
+        default='http://localhost:8080'
+    )
+
+    ALLOWED_HOSTS = [app_hostname]
+    CSRF_TRUSTED_ORIGINS = [csrf_trusted_origin]
+    CSRF_COOKIE_DOMAIN = app_hostname
 
 # Application definition
 
@@ -110,6 +116,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -167,6 +174,11 @@ else:
     DATABASE_URL = config('DATABASE_URL', default=None)
     if not DATABASE_URL:
         raise ValueError("DATABASE_URL is not set in the environment variables.")
+
+    # Accept a plain sqlite file path and normalize it to a valid database URL.
+    if '://' not in DATABASE_URL:
+        DATABASE_URL = f"sqlite:///{DATABASE_URL}"
+
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL)
     }
@@ -206,7 +218,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

@@ -1,0 +1,30 @@
+#   Edited by:
+#   Ionut Ciobanu
+#
+
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pym
+
+## Environments
+# .env
+# venv/
+# .venv/
+# ENV/
+
+## Local files
+db.sqlite3
+*.sqlite3
+*.sqlite3-journal
+staticfiles/
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# Git
+.git
