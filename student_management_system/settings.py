@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',  # social account integration
     'crispy_forms',  # for better form rendering
     'homepage',  # add homepage app
+    'booking_page',  # booking page app
     ]
 
 ACCOUNT_FORMS = {
