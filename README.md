@@ -41,7 +41,7 @@ This application is only a prototype and does not include major functions such a
  
 ### Project Goal
  
-The goal of the student event management system is to simplify event organisation and communication between organisers and students attending the events. Those who have the app can browse upcoming events and book their place.
+The goal of the student event management system is to simplify event organisation and communication between organisers and students attending the events. Those who have the app can browse upcoming events and book their place. The app also aims to connect differet communities of students together.
  
 ### User Stories
 
@@ -67,9 +67,9 @@ Admin:
 ### Scope
  
 User Registration and Authentication
-- Users can create an account and log in to the website.
+- Users can create an account and log in to the application.
 - Users can reset their passwords if forgotten.
-- Login accepts either email or username.
+- Login accepts student id.
  
 Event Discovery and Booking
 - Users can browse available basketball events without logging in.
@@ -93,7 +93,7 @@ User Profile
  
 ### Agile Methodology
  
-The development of Hoop and Go follows an agile methodology approach using weekly sprint cycles. Each sprint focuses on delivering specific features drawn from the Requirements Specification, tracked through Jira with a rotating Scrum Master each sprint. All user stories, sprint backlogs, and progress can be accessed via our Jira board [here](https://aidaskibas17.atlassian.net/jira/software/projects/SCRUM/summary).
+The development of the Student Event Management System follows an agile methodology approach using weekly sprint cycles. Each sprint focuses on delivering specific features drawn from the product backlog list, tracked through Jira with a rotating Scrum Master each sprint. All user stories, sprint backlogs, and progress can be accessed via our Jira board [here](https://aidaskibas17.atlassian.net/jira/software/projects/SEPNI/boards/34/backlog).
  
 Our GitHub repository is linked to Jira so that branches, commits, and pull requests are tracked directly against their corresponding Jira issue.
  
@@ -103,34 +103,41 @@ Our GitHub repository is linked to Jira so that branches, commits, and pull requ
  
 ### Use Case Diagram
  
-The core functional requirements are represented by 8 use cases: Login, Register New User, Register Vehicle, Select Event, Manage Booking, Change Details, Create Event, and Delete Event, as detailed in our Requirements Specification.
+The core functional requirements are represented by our 10 use cases: Login, Register New User, Select Event, Check Availability, Cancel Booking, Request Refund, Approve Event, Send Notification, Manage Event, and Create Event.
  
 ### Database Schema
  
-The core entities are User, Event, Booking, and Payment (future feature), linked as follows: a User can organise many Events, a User can make many Bookings, an Event can have many Bookings, and a Booking may generate one Payment.
+The core entities are User, Event, Booking, and Payment (not within the prototype), linked as follows: a User can organise many Events, a User can make many Bookings, an Event can have many Bookings, and a Booking may generate one Payment.
  
 <br>
  
 ## Features
  
-- User registration and login (email or username)
+- User registration (personal details) and login (email)
 - Password reset flow
-- Browse and search available basketball events
-- Join an event with real-time capacity checks
-- Register a vehicle for free event parking
-- View and manage (cancel) bookings
-- Edit personal account details
-- Organiser-only event creation and deletion, password-protected
-- **Stripe payment integration** for paid events, allowing organisers to charge entry fees and users to pay securely at checkout.
-- "Every 10th event free" loyalty incentive once payments are introduced.
+- Browse available student events
+- Book an event with real-time capacity checks
+- View and manage (cancel) bookings - student
+- Organiser and admin-only event creation, password-protected
+- Notifications window for sending notifications to the admin to approve created events.
+- Approve and reject events feature.
+- Manage events by updating information or deleting events when they have finished - admin only
+- Confirm update/delete event button.
  
 <br>
  
 ## Future Features
- 
+
+- **Stripe payment integration** for paid events, allowing organisers to charge entry fees and users to pay securely at checkout (Not in the prototype).
+- View account and edit personal details.
+- Social platform for communication between group attendees.
+  
 <br>
  
 ## Testing
+
+This project requires black and white box testing - with external functionality and internal code functionality being tested. Unit tests will also be performed to ensure all features work as advertised.
+
 <br>
  
 ## Technologies Used
@@ -157,8 +164,6 @@ The core entities are User, Event, Booking, and Payment (future feature), linked
 - gunicorn
  
 <br>
- 
-## Deployment
  
 ### Docker Setup
  
@@ -193,7 +198,6 @@ The project's PostgreSQL database is hosted for free on [Neon](Neon — Postgres
 ## Credits
  
 - Aidas Kibas
-- Michal Pokojny
 - Nerijus Kmitas
 - Ionut Ciobanu
  
@@ -201,7 +205,4 @@ The project's PostgreSQL database is hosted for free on [Neon](Neon — Postgres
  
 ## Acknowledgements
  
-- National College of Ireland, Team Project module, lectured by Sumit Tripathi.
- 
-Jira
- 
+- National College of Ireland, Software Engineering module, lectured by Taylou Maniganze.
