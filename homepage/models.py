@@ -33,7 +33,31 @@ class Event(models.Model):
 
     capacity = models.PositiveIntegerField()
 
+    approved = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+    
+class UserProfile(models.Model):
+
+    ROLE_CHOICES = [
+        ('Student', 'Student'),
+        ('Organizer', 'Organizer'),
+    ]
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default="Student"
+    )
+
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"

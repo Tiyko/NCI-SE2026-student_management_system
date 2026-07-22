@@ -97,6 +97,8 @@ INSTALLED_APPS = [
     'homepage',  # add homepage app
     'booking_page',  # booking page app
     'events', # events page
+    'create_event', # create events page
+    'approve_event', # approval of an event
     ]
 
 ACCOUNT_FORMS = {

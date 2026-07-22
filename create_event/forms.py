@@ -1,0 +1,27 @@
+from django import forms
+from homepage.models import Event
+
+
+class EventForm(forms.ModelForm):
+
+    class Meta:
+        model = Event
+
+        fields = [
+            'title',
+            'sport_type',
+            'location',
+            'date',
+            'start_time',
+            'capacity',
+        ]
+
+        widgets = {
+            'date': forms.DateInput(
+                attrs={'type': 'date'}
+            ),
+
+            'start_time': forms.TimeInput(
+                attrs={'type': 'time'}
+            ),
+        }

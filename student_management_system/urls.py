@@ -26,5 +26,6 @@ urlpatterns = [
     path('', include('homepage.urls'), name='homepage'),
     path('events/', include('events.urls'), name='events'),
     path('booking_page/', include('booking_page.urls'), name='booking_page'),
-    
+    path('create_event/', include('create_event.urls'), name='create_event'),
+    path('approve_event/', include('approve_event.urls'), name='approve_event'),
 ]

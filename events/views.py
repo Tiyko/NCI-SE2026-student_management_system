@@ -3,7 +3,7 @@ from homepage.models import Event
 
 
 def events(request):
-    event_list = Event.objects.all()
+    event_list = Event.objects.filter(approved=True)
 
     return render(
         request,
