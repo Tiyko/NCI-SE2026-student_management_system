@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">Available Events</h2>
+
+    {% if events %}
+
+        {% for event in events %}
+
+            <div class="card mb-4">
+
+                <div class="card-body">
+
+                    <h4>{{ event.title }}</h4>
+
+                    <p><strong>Sport:</strong> {{ event.sport_type }}</p>
+
+                    <p><strong>Location:</strong> {{ event.location }}</p>
+
+                    <p><strong>Date:</strong> {{ event.date }}</p>
+
+                    <p><strong>Start Time:</strong> {{ event.start_time }}</p>
+
+                    <p><strong>Capacity:</strong> {{ event.capacity }}</p>
+
+                    <p><strong>Organiser:</strong> {{ event.organiser.username }}</p>
+
+                    <a href="{% url 'booking_page' event.id %}" class="btn btn-primary">
+                        Book Event
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No events available.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

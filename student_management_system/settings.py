@@ -62,13 +62,13 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Allow all hosts in development, restrict to specific host in production
 if development:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
     CSRF_TRUSTED_ORIGINS = [
-        'http://127.0.0.1',
-        'http://localhost'
+        'http://localhost:8080',
+        'http://127.0.0.1:8080',
     ]
-    CSRF_COOKIE_DOMAIN = [
-        '127.0.0.1'
-    ]
+
+    CSRF_COOKIE_DOMAIN = None
 else:
     app_hostname = config('APP_HOSTNAME', default='localhost')
     csrf_trusted_origin = config(
@@ -78,7 +78,6 @@ else:
 
     ALLOWED_HOSTS = [app_hostname]
     CSRF_TRUSTED_ORIGINS = [csrf_trusted_origin]
-    CSRF_COOKIE_DOMAIN = app_hostname
 
 # Application definition
 
@@ -97,6 +96,7 @@ INSTALLED_APPS = [
     'crispy_forms',  # for better form rendering
     'homepage',  # add homepage app
     'booking_page',  # booking page app
+    'events', # events page
     ]
 
 ACCOUNT_FORMS = {

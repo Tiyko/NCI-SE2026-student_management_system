@@ -1,7 +1,78 @@
 {% extends "base.html" %}
+
 {% block content %}
-    <div class="container">
-        <h1 class="colorreds display-2">Student Management System!</h1>
-        <p class="lead">To manage all sort of events!</p>
-    </div>
+
+<div class="container py-5">
+
+    <h1 class="colorreds display-2">Student Management System!</h1>
+    <p class="lead">Manage and book sports events.</p>
+
+    <hr class="my-5">
+
+    <h2 class="mb-4">Available Events</h2>
+
+    {% if events %}
+
+        <div class="row">
+
+            {% for event in events %}
+
+                <div class="col-md-6 mb-4">
+
+                    <div class="card shadow h-100">
+
+                        <div class="card-body">
+
+                            <h4>{{ event.title }}</h4>
+
+                            <p>
+                                <strong>Sport:</strong>
+                                {{ event.sport_type }}
+                            </p>
+
+                            <p>
+                                <strong>Date:</strong>
+                                {{ event.date }}
+                            </p>
+
+                            <p>
+                                <strong>Time:</strong>
+                                {{ event.start_time }}
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                {{ event.location }}
+                            </p>
+
+                            <p>
+                                <strong>Capacity:</strong>
+                                {{ event.capacity }}
+                            </p>
+
+                            <a href="{% url 'booking_page' event.id %}"
+                               class="btn btn-primary">
+                                Book Event
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            No events available yet.
+        </div>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}
