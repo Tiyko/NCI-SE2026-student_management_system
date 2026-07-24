@@ -49,3 +49,10 @@ def booking_page(request, event_id):
             "event": event
         }
     )
+
+@login_required
+def request_refund(request):
+    return render(
+        request,
+        "home/request_page.html"
+    )
