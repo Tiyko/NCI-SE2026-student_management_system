@@ -10,3 +10,41 @@
     color: red;
     text-decoration: underline;
 }
+
+/*Homepage css - Aidas Kibas*/
+
+#h_head {
+    color: rgb(144, 71, 255);
+    text-decoration: bold;
+}
+
+#i_div1 {
+    border: 2px solid black;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#i_div2 {
+    margin-top: 20px;
+}
+
+.h_btn {
+    color: white;
+    background-color: rgb(144, 71, 255);
+    border: 1px solid rgb(144, 71, 255);
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.h_btn:hover {
+    color: rgb(144, 71, 255);
+    background-color: white;
+    border: 1px solid rgb(144, 71, 255);
+}
+
+#i_div3 img{
+    width: 630px;
+}
