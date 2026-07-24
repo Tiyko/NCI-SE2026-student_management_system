@@ -1,13 +1,60 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
 <div class="container py-5">
 
-    <h1 class="colorreds display-2">Student Management System!</h1>
-    <p class="lead">Manage and book sports events.</p>
+    <h1 id="h_head" display-2">Student Event Management System!</h1>
+    <p class="lead">Find, book, and manage your student events with the student event management system - created by The ANI Group!</p>
 
     <hr class="my-5">
 </div>
+
+<br>
+
+    <div id="i_div1">   
+
+        <div id="i_div2">
+            <h4>With the Student Event Management System, you can easily browse and book an event without the hassle of constant communication with a group of people!</h4>
+
+                <a href="{% url 'events' %}">
+                    <button class="h_btn">View Events</button>
+                </a>
+        </div>
+
+            <div id="i_div3">
+                <img src="{% static 'images/concert.jpg' %}" alt="Crowd at a concert">
+            </div>
+
+    </div>
+
+    <br>
+
+    <div id="i_div1">   
+
+        <div id="i_div2">
+            <h4>Cant make it to an event? No problem! With the Student Event Management System, you can easily request a refund for your booked event!</h4>
+
+                <a href="{% url 'events' %}">
+                    <button class="h_btn">Refund Event</button>
+                </a>
+        </div>
+
+            <div id="i_div3">
+                <img src="{% static 'images/receipt.jpg' %}" alt="Receipt for an event">
+            </div>
+
+    </div>
+
+    <br>
+
+    <!-- This div structures the footer of the page -->
+
+    <footer class="container-fluid bg-light py-3 mt-5">
+        <div class="text-center">
+            <p class="mb-0">&copy; 2026 Student Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
 
 {% endblock %}
