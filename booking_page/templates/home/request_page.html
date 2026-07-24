@@ -11,6 +11,51 @@
     <hr class="my-5">
 </div>
 
+<div>
+
+    <p>View your booked events below and request a refund for any you are unable to attend.</p>
+
+</div>
+
+<br><br>
+
+{% if bookings %}
+
+    {% for booking in bookings %}
+
+        <div id="r_div">
+            <p>
+                {{ booking.event.title }}
+                {{ booking.event.description }}<br>
+                {{ booking.event.date }}<br>
+                {{ booking.event.start_time }}
+                
+            </p>
+
+            {% if pending_booking and pending_booking.id == booking.id %}
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                    <input type="hidden" name="confirm_refund" value="1">
+                    <button type="submit" class="r_btn">Confirm Refund</button>
+                </form>
+            {% else %}
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                    <button type="submit" class="r_btn">Request Refund</button><br>
+                </form>
+            {% endif %}
+        </div>
+        <br>
+    {% endfor %}
+
+{% else %}
+
+    <p>There are currently no booked events...</p>
+
+{% endif %}
+
  <!-- This div structures the footer of the page -->
 
     <footer class="container-fluid bg-light py-3 mt-5">
