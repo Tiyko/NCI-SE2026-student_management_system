@@ -22,7 +22,6 @@ from decouple import config
 import dj_database_url
 from django.contrib.messages import constants as messages
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
@@ -99,10 +98,12 @@ INSTALLED_APPS = [
     'events', # events page
     'create_event', # create events page
     'approve_event', # approval of an event
+    'notifications', # send and view notifications
     ]
 
 ACCOUNT_FORMS = {
     "login": "forms.CustomLoginForm",
+    "signup": "forms.CustomSignupForm",
 }
 
 SITE_ID = 1
@@ -123,6 +124,7 @@ MESSAGE_TAGS = {
     }
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_SIGNUP_FIELDS = ['first_name*', 'last_name*', 'email*', 'username*', 'password1*', 'password2*']
 
 # AllAuth Configuration
 # https://django-allauth.readthedocs.io/en/latest/
@@ -159,11 +161,13 @@ TEMPLATES = [
         'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
+            # Feed the navigation with per-user notification data.
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notifications.notifications_context.notification_dropdown',
             ],
         },
     },

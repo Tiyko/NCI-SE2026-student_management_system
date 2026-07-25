@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Student inbox for unread/read notifications. -->
+<div class="container mt-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h2 class="mb-1">My Notifications</h2>
+      <p class="text-muted mb-0">Event updates, reminders, and announcements appear here.</p>
+    </div>
+    {% if unread_count %}
+      <form method="post" action="{% url 'notification_mark_all_read' %}" class="m-0">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" class="btn btn-primary">Mark all as read</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      {% if notification_receipts %}
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Message</th>
+                <th>Event</th>
+                <th>Received</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for receipt in notification_receipts %}
+                <tr>
+                  <td>
+                    <span class="badge {% if receipt.is_read %}bg-secondary{% else %}bg-primary{% endif %}">
+                      {{ receipt.notification.get_notification_type_display }}
+                    </span>
+                  </td>
+                  <td>{{ receipt.notification.message|truncatechars:90 }}</td>
+                  <td>
+                    {% if receipt.notification.event %}
+                      {{ receipt.notification.event.title }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td>{{ receipt.notification.created_at|date:"Y-m-d H:i" }}</td>
+                  <td>{% if receipt.is_read %}Read{% else %}Unread{% endif %}</td>
+                  <td class="text-end">
+                    <form method="post" action="{% url 'notification_toggle_read' receipt.id %}" class="m-0">
+                      {% csrf_token %}
+                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                      <button type="submit" class="btn btn-sm {% if receipt.is_read %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}">
+                        {% if receipt.is_read %}Mark unread{% else %}Mark as read{% endif %}
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="mb-0">You do not have any notifications yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

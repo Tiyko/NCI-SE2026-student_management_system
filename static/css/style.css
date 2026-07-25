@@ -1,9 +1,28 @@
 
 /* GLOBAL SETTINGS */
 
+/*   Edited by:
+     Ionut Ciobanu
+*/
+
 /* hide the auto-generated password helptext link in allauth login form */
 .auth-card .helptext {
     display: none !important;
+}
+
+/* Keep all auth forms visually consistent inside the shared card shell. */
+.auth-card {
+    background: #fff;
+}
+
+.auth-card form p {
+    margin-bottom: 1rem;
+}
+
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+    width: 100%;
 }
 
 .colorreds {
