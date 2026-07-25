@@ -1,4 +1,5 @@
 
+<!-- Notification Menu -->
 <li class="list-inline-item dropdown">
     <a class="text-black nav-link d-block d-lg-none dropdown-toggle" href="#" id="mobile-user-options" role="button"
         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -19,7 +20,7 @@
             <li><hr class="dropdown-divider"></li>
             {% if request.user.is_superuser %}
                 {# Admins only need the manage/send entries here. #}
-                <li><a href="{% url 'notifications' %}" class="dropdown-item">Create Notification</a></li>
+                <li><a href="{% url 'notifications' %}" class="dropdown-item">Manage Notification</a></li>
             {% elif notification_dropdown_items %}
                 {% for receipt in notification_dropdown_items %}
                     <li>
@@ -51,14 +52,33 @@
             {% else %}
                 <li><span class="dropdown-item-text text-muted">No notifications yet.</span></li>
             {% endif %}
+        {% endif %}
+    </ul>
+</li>
+
+
+<!-- Profile Menu -->
+<li class="list-inline-item dropdown">
+    <a class="text-black nav-link d-block d-lg-none dropdown-toggle" href="#" id="mobile-user-options" role="button"
+        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="text-center">
+            <div><i class="fas fa-user fa-lg"></i></div>
+             <span class="navbar-toggler-icon"></span>
+        </div>
+    </a>
+    <ul class="dropdown-menu border-0" aria-labelledby="user-options">
+        {% if request.user.is_authenticated %}
+
+            
+
             {% if request.user.is_superuser %}
                 <li><a href="{% url 'admin:index' %}" class="dropdown-item">Admin</a></li>
             {% endif %}
             <li><a href="#" class="dropdown-item">Profile</a></li>
             <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
-        {% else %}
-            <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
-            <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
+            {% else %}
+                <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
+                <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
         {% endif %}
     </ul>
 </li>
