@@ -16,9 +16,9 @@ class Notification(models.Model):
 	TYPE_ANNOUNCEMENT = "announcement"
 
 	NOTIFICATION_TYPE_CHOICES = [
-		(TYPE_EVENT_UPDATE, "Event Update"),
-		(TYPE_REMINDER, "Reminder"),
 		(TYPE_ANNOUNCEMENT, "Announcement"),
+		(TYPE_EVENT_UPDATE, "Event"),
+		(TYPE_REMINDER, "Reminder"),
 	]
 
 	AUDIENCE_ALL_STUDENTS = "all_students"

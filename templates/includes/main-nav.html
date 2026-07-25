@@ -15,15 +15,26 @@
             </a>
         </li>
 
-        <li class="nav-item dropdown">
-            <a class="logo-font font-weight-bold nav-link text-black mr-5"
-            href="{% url 'request_refund' %}"
-            id="events-link">
-                Request Refund
-            </a>
-        </li>
-        
+
 {% if request.user.is_authenticated %}
+
+        {% if request.user.is_superuser or request.user.userprofile.role == "Organizer" %}
+            <li class="nav-item">
+                <a class="nav-link text-black mr-5" href="{% url 'create_event' %}">
+                    Create Event
+                </a>
+            </li>
+        {% endif %}
+
+        {% if request.user.is_superuser %}
+            <li class="nav-item">
+                <a class="nav-link text-black mr-5"
+                    href="{% url 'approve_events' %}">
+                        Approve Events
+                </a>
+            </li>
+        {% endif %}
+        
 
         <li class="nav-item dropdown">
             <a class="nav-link text-black dropdown-toggle mr-5"
@@ -79,37 +90,24 @@
                 {% if request.user.is_superuser %}
                     <li>
                         <a class="dropdown-item" href="{% url 'notifications' %}?type=announcement">
-                            Create Notification
+                            Manage Notifications
                         </a>
                     </li>
+                {% endif %}
+
+                {% if not request.user.is_superuser and request.user.userprofile.role == "Student" and notification_dropdown_items %}
+                <li>
+                    <a class="dropdown-item" href="{% url 'notifications' %}">
+                        View All Notifications
+                    </a>
+                </li>
                 {% endif %}
             </ul>
         </li>
 
-    {% if request.user.is_superuser or request.user.userprofile.role == "Organizer" %}
-
-        <li class="nav-item">
-            <a class="nav-link text-black mr-5"
-               href="{% url 'create_event' %}">
-                Create Event
-            </a>
-        </li>
-
-    {% endif %}
+    
 
 {% endif %}
-
-        {% if request.user.is_superuser %}
-
-        <li class="nav-item">
-            <a class="nav-link text-black mr-5"
-                href="{% url 'approve_events' %}">
-                    Approve Events
-            </a>
-        </li>
-        {% endif %}
-
-
         <li class="nav-item dropdown">
             <a class="nav-link text-black dropdown-toggle" id="user-options" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
                 href="#">
@@ -125,6 +123,7 @@
                     {% if request.user.is_superuser %}
                         <li><a href="{% url 'admin:index' %}" class="dropdown-item">Admin</a></li>
                     {% endif %}
+                    <li><a href="{% url 'request_refund' %}" class="dropdown-item" id="events-link">Request Refund</a> </li>
                     <li><a href="{% url 'account_email' %}" class="dropdown-item">Email</a></li>
                     <li><a href="{% url 'account_change_password' %}" class="dropdown-item">Change Password</a></li>
                     <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
