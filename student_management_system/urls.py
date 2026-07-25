@@ -28,4 +28,5 @@ urlpatterns = [
     path('booking_page/', include('booking_page.urls'), name='booking_page'),
     path('create_event/', include('create_event.urls'), name='create_event'),
     path('approve_event/', include('approve_event.urls'), name='approve_event'),
+    path('notifications/', include('notifications.urls'), name='notifications'),
 ]

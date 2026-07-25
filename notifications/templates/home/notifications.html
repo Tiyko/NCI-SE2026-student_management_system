@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Admin notification composer and recent-sends table. -->
+<div class="container mt-5">
+  <h2>{% if editing_notification %}Edit Notification{% else %}Send Notification{% endif %}</h2>
+  <p class="text-muted">Send event updates, reminders, and announcements to students.</p>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="POST">
+        {% csrf_token %}
+
+        {% if editing_notification %}
+          {# Keep the primary form bound to the existing notification row when editing. #}
+          <input type="hidden" name="notification_id" value="{{ editing_notification.id }}">
+        {% endif %}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <div class="mb-3">
+          <label for="id_notification_type" class="form-label">Notification Type</label>
+          {{ form.notification_type }}
+          {% if form.notification_type.errors %}
+            <div class="text-danger small mt-1">{{ form.notification_type.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_audience_type" class="form-label">Recipients</label>
+          {{ form.audience_type }}
+          {% if form.audience_type.errors %}
+            <div class="text-danger small mt-1">{{ form.audience_type.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3" id="event-select-wrapper">
+          <label for="id_event" class="form-label">Event (for event participants)</label>
+          {{ form.event }}
+          {% if form.event.errors %}
+            <div class="text-danger small mt-1">{{ form.event.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_message" class="form-label">Message</label>
+          {{ form.message }}
+          {% if form.message.errors %}
+            <div class="text-danger small mt-1">{{ form.message.errors }}</div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          {% if editing_notification %}Update Notification{% else %}Send Notification{% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      {% if recent_notifications %}
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Audience</th>
+                <th>Event</th>
+                <th>Sent</th>
+                <th>Recipients</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for notification in recent_notifications %}
+                <tr>
+                  <td>{{ notification.get_notification_type_display }}</td>
+                  <td>{{ notification.get_audience_type_display }}</td>
+                  <td>
+                    {% if notification.event %}
+                      {{ notification.event.title }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td>{{ notification.created_at|date:"Y-m-d H:i" }}</td>
+                  <td>{{ notification.recipient_links.count }}</td>
+                  <td class="text-end">
+                    <div class="d-inline-flex gap-2">
+                      {# Send the selected row back into the form for editing. #}
+                      <a class="btn btn-sm btn-outline-primary" href="{% url 'notifications' %}?edit={{ notification.id }}">
+                        Edit
+                      </a>
+                      <form method="post" action="{% url 'notification_delete' notification.id %}" class="m-0">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this notification?');">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="mb-0">No notifications have been sent yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Hide the event picker unless the audience needs an event target.
+    const audienceField = document.getElementById("id_audience_type");
+    const eventWrapper = document.getElementById("event-select-wrapper");
+
+    function toggleEventField() {
+      if (!audienceField || !eventWrapper) {
+        return;
+      }
+
+      const showEvent = audienceField.value === "event_participants";
+      eventWrapper.style.display = showEvent ? "block" : "none";
+    }
+
+    if (audienceField) {
+      audienceField.addEventListener("change", toggleEventField);
+      toggleEventField();
+    }
+  })();
+</script>
+
+{% endblock %}

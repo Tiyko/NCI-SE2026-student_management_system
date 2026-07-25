@@ -25,6 +25,67 @@
         
 {% if request.user.is_authenticated %}
 
+        <li class="nav-item dropdown">
+            <a class="nav-link text-black dropdown-toggle mr-5"
+               id="notifications-menu"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false"
+               href="#">
+                Notifications
+                {% if notification_unread_count %}
+                    <span class="badge bg-danger ms-1">{{ notification_unread_count }}</span>
+                {% endif %}
+            </a>
+            <ul class="dropdown-menu border-0 dropdown-menu-end shadow-sm" aria-labelledby="notifications-menu" style="min-width: 22rem; max-width: 28rem;">
+                <li class="dropdown-item-text d-flex justify-content-between align-items-center gap-2">
+                    {% if notification_unread_count %}
+                        <form method="post" action="{% url 'notification_mark_all_read' %}" class="m-0">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="btn btn-link btn-sm p-0 text-decoration-none">Mark all as read</button>
+                        </form>
+                    {% endif %}
+                </li>
+                {% if notification_dropdown_items %}
+                    {% for receipt in notification_dropdown_items %}
+                        <li>
+                            <div class="dropdown-item d-flex align-items-start gap-2 py-2">
+                                <span class="badge {% if receipt.is_read %}bg-secondary{% else %}bg-primary{% endif %} align-self-start">
+                                    {{ receipt.notification.get_notification_type_display }}
+                                </span>
+                                <div class="flex-grow-1 small">
+                                    <div class="fw-semibold {% if receipt.is_read %}text-muted{% endif %}">
+                                        {% if receipt.notification.event %}
+                                            {{ receipt.notification.event.title }}
+                                        {% else %}
+                                            {{ receipt.notification.message|truncatechars:42 }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-muted">{{ receipt.notification.created_at|date:"M d, H:i" }}</div>
+                                </div>
+                                <form method="post" action="{% url 'notification_toggle_read' receipt.id %}" class="m-0">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="btn btn-link btn-sm p-0 text-decoration-none">
+                                        {% if receipt.is_read %}Unread{% else %}Read{% endif %}
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                {% if request.user.is_superuser %}
+                    <li>
+                        <a class="dropdown-item" href="{% url 'notifications' %}?type=announcement">
+                            Create Notification
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+
     {% if request.user.is_superuser or request.user.userprofile.role == "Organizer" %}
 
         <li class="nav-item">
@@ -46,7 +107,6 @@
                     Approve Events
             </a>
         </li>
-
         {% endif %}
 
 

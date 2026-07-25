@@ -9,6 +9,48 @@
     </a>
     <ul class="dropdown-menu border-0" aria-labelledby="user-options">
         {% if request.user.is_authenticated %}
+            {# Students get the live notification list; admins get manage/send links only. #}
+            <li class="dropdown-item-text fw-semibold d-flex justify-content-between align-items-center gap-2">
+                <span>Notifications</span>
+                {% if not request.user.is_superuser and notification_unread_count %}
+                    <span class="badge bg-danger">{{ notification_unread_count }}</span>
+                {% endif %}
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            {% if request.user.is_superuser %}
+                {# Admins only need the manage/send entries here. #}
+                <li><a href="{% url 'notifications' %}" class="dropdown-item">Create Notification</a></li>
+            {% elif notification_dropdown_items %}
+                {% for receipt in notification_dropdown_items %}
+                    <li>
+                        {# Keep the item layout aligned with the desktop dropdown. #}
+                        <div class="dropdown-item d-flex align-items-start gap-2 py-2">
+                            <span class="badge {% if receipt.is_read %}bg-secondary{% else %}bg-primary{% endif %} align-self-start">
+                                {{ receipt.notification.get_notification_type_display }}
+                            </span>
+                            <div class="flex-grow-1 small">
+                                <div class="fw-semibold {% if receipt.is_read %}text-muted{% endif %}">
+                                    {% if receipt.notification.event %}
+                                        {{ receipt.notification.event.title }}
+                                    {% else %}
+                                        {{ receipt.notification.message|truncatechars:34 }}
+                                    {% endif %}
+                                </div>
+                                <div class="text-muted">{{ receipt.notification.created_at|date:"M d, H:i" }}</div>
+                            </div>
+                            <form method="post" action="{% url 'notification_toggle_read' receipt.id %}" class="m-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="btn btn-link btn-sm p-0 text-decoration-none">
+                                    {% if receipt.is_read %}Unread{% else %}Read{% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li><span class="dropdown-item-text text-muted">No notifications yet.</span></li>
+            {% endif %}
             {% if request.user.is_superuser %}
                 <li><a href="{% url 'admin:index' %}" class="dropdown-item">Admin</a></li>
             {% endif %}
