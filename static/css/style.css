@@ -30,6 +30,27 @@
     text-decoration: underline;
 }
 
+/*Navbar css - Aidas Kibas*/
+
+#nav-link {
+    background-color: rgb(254, 254, 254);
+    color: rgb(144, 71, 255);
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 30px;
+    padding: 8px;
+    text-align: center;
+}
+
+#profile-link {
+    background-color: rgb(254, 254, 254);
+    color: rgb(144, 71, 255);
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+
 /*Homepage css - Aidas Kibas*/
 
 #h_head {

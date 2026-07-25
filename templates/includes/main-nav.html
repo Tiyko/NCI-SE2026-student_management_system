@@ -2,7 +2,7 @@
     <ul class="navbar-nav w-auto mx-auto">
 
         <li class="nav-item dropdown">
-            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'home' %}" id="home-link">
+            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'home' %}" id="nav-link">
                 Home
             </a>
         </li>
@@ -10,8 +10,14 @@
         <li class="nav-item dropdown">
             <a class="logo-font font-weight-bold nav-link text-black mr-5"
             href="{% url 'events' %}"
-            id="events-link">
+            id="nav-link">
                 Events
+            </a>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'request_refund' %}" id="nav-link">
+                Request Refund
             </a>
         </li>
 
@@ -20,7 +26,7 @@
 
         {% if request.user.is_superuser or request.user.userprofile.role == "Organizer" %}
             <li class="nav-item">
-                <a class="nav-link text-black mr-5" href="{% url 'create_event' %}">
+                <a class="nav-link text-black mr-5" href="{% url 'create_event' %}" id="nav-link">
                     Create Event
                 </a>
             </li>
@@ -29,7 +35,7 @@
         {% if request.user.is_superuser %}
             <li class="nav-item">
                 <a class="nav-link text-black mr-5"
-                    href="{% url 'approve_events' %}">
+                    href="{% url 'approve_events' %}" id="nav-link">
                         Approve Events
                 </a>
             </li>
@@ -38,7 +44,7 @@
 
         <li class="nav-item dropdown">
             <a class="nav-link text-black dropdown-toggle mr-5"
-               id="notifications-menu"
+               id="nav-link"
                role="button"
                data-bs-toggle="dropdown"
                aria-expanded="false"
@@ -115,7 +121,7 @@
                     <div>
                         <i class="fas fa-user fa-lg"></i>
                     </div>
-                    <p class="my-0">Profile</p>
+                    <p class="my-0" id="profile-link">Profile</p>
                 </div>
             </a>
             <ul class="dropdown-menu border-0" aria-labelledby="user-options">
