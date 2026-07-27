@@ -1,3 +1,5 @@
+<!-- Events html page (Nerijus Kmitas x24170232) -->
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -25,6 +27,8 @@
                     <p><strong>Start Time:</strong> {{ event.start_time }}</p>
 
                     <p><strong>Capacity:</strong> {{ event.capacity }}</p>
+                    
+                    <p><strong>Available Places:</strong> {{ event.available_places }} players</p>
 
                     <p><strong>Organiser:</strong> {{ event.organiser.username }}</p>
 
