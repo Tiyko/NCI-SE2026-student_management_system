@@ -1,5 +1,3 @@
-from urllib import request
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -35,19 +33,31 @@ def booking_page(request, event_id):
                 "You are already booked for this event."
             )
 
+            # Other wise continue with booking
         else:
-            # Creates a new booking record in the database that will be linked
-            # with logged-in user with the selected event
-            Booking.objects.create(
-                student=request.user,
-                event=event
-            )
 
-            # Displays success message after booking is created
-            messages.success(
-                request,
-                "Your booking was successful!"
-            )
+            # Calculate available places
+            available_places = event.capacity - event.bookings.count()
+
+            # Check if the event is sold out
+            if available_places <= 0:
+                messages.error(
+                    request,
+                    "Sorry, this event is sold out."
+                )
+
+            else:
+                # Creates a new booking record in the database
+                Booking.objects.create(
+                    student=request.user,
+                    event=event
+                )
+
+                # Displays success message after booking is created
+                messages.success(
+                    request,
+                    "Your booking was successful!"
+                )
 
         # After booking processed will return user to the events page
         return redirect("events")
@@ -73,6 +83,8 @@ def request_refund(request):
         booking = Booking.objects.filter(student=request.user, id=booking_id).first()
 
         if confirm_refund and booking:
+
+            # Delete the booking
             booking.delete()
             bookings = Booking.objects.filter(student=request.user)
             messages.success(request, "Your refund has been processed.")
