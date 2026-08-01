@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from datetime import datetime
 
 from homepage.models import Event
 from .models import Booking
@@ -72,8 +74,42 @@ def booking_page(request, event_id):
         }
     )
 
-@login_required
+#Aidas Kibas - Refund request page
+
 def request_refund(request):
+    bookings = []
+
+    if request.user.is_authenticated:
+        bookings = Booking.objects.filter(student=request.user).select_related('event').order_by('-booked_at')
+
+    for booking in bookings:
+        event_datetime = datetime.combine(
+            booking.event.date,
+            booking.event.start_time
+        )
+
+        # Make the datetime timezone-aware
+        event_datetime = timezone.make_aware(event_datetime)
+
+        booking.is_past = event_datetime < timezone.now()
+
+    return render(request, "home/request_page.html", {
+        "bookings": bookings,
+    })
+
+def remove_booking(request, booking_id):
+    if request.user.is_authenticated:
+        try:
+            booking = Booking.objects.get(id=booking_id, student=request.user)
+            booking.delete()
+            messages.success(request, "Booking removed successfully.")
+        except Booking.DoesNotExist:
+            messages.error(request, "Booking not found.")
+
+    return request_refund(request) 
+
+@login_required
+def cancel_booking(request, booking_id):
     bookings = Booking.objects.filter(student=request.user)
 
     if request.method == "POST":
@@ -89,7 +125,7 @@ def request_refund(request):
             bookings = Booking.objects.filter(student=request.user)
             messages.success(request, "Your refund has been processed.")
         elif booking:
-            messages.info(
+            messages.warning(
                 request,
                 f"Are you sure you would like to refund this event: {booking.event.title}?"
             )
