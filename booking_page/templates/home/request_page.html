@@ -19,42 +19,58 @@
 
 <br><br>
 
-{% if bookings %}
+{% if request.user.is_authenticated %}
+            <p class="lead">You are logged in as: <strong>{{ request.user.username }}</strong>.</p>
 
-    {% for booking in bookings %}
-
-        <div id="r_div">
-            <p>
-                {{ booking.event.title }}
-                {{ booking.event.description }}<br>
-                {{ booking.event.date }}<br>
-                {{ booking.event.start_time }}
-                
-            </p>
-
-            {% if pending_booking and pending_booking.id == booking.id %}
-                <form method="post" class="d-inline">
-                    {% csrf_token %}
-                    <input type="hidden" name="booking_id" value="{{ booking.id }}">
-                    <input type="hidden" name="confirm_refund" value="1">
-                    <button type="submit" class="r_btn">Confirm Refund</button>
-                </form>
+            {% if bookings %}
+                {% for booking in bookings %}
+                    <div id="r_display">
+                        {% if booking.is_past %}
+                            <p style="color: red;"><strong>Status:</strong> Past Event</p>
+                            <p><strong>Event:</strong> {{ booking.event.title }}</p>
+                            <p><strong>Sport:</strong> {{ booking.event.sport_type }}</p>
+                            <p><strong>Location:</strong> {{ booking.event.location }}</p>
+                            <p><strong>Date:</strong> {{ booking.event.date }}</p>
+                            <p><strong>Time:</strong> {{ booking.event.start_time }}</p>
+                        {% else %}
+                            <p style="color: green;"><strong>Status:</strong> Upcoming Event</p>
+                            <p><strong>Event:</strong> {{ booking.event.title }}</p>
+                            <p><strong>Sport:</strong> {{ booking.event.sport_type }}</p>
+                            <p><strong>Location:</strong> {{ booking.event.location }}</p>
+                            <p><strong>Date:</strong> {{ booking.event.date }}</p>
+                            <p><strong>Time:</strong> {{ booking.event.start_time }}</p>
+                        {% endif %}
+                        
+                        {% if booking.is_past %}
+                        <form method="post" action="{% url 'remove_booking' booking.id %}">
+                            {% csrf_token %}
+                            <button id="remove-btn">Remove Booking</button>
+                        </form>
+                        {% else %}
+                        {% if pending_booking and pending_booking.id == booking.id %}
+                        <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                        <input type="hidden" name="confirm_refund" value="1">
+                        <button type="submit" class="cancel-btn">Confirm Refund</button>
+                        </form>
+                        {% else %}
+                        <form method="post" action="{% url 'cancel_booking' booking.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                        <button type="submit" class="cancel-btn">Request Refund</button><br>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </div><br>
+                {% endfor %}
             {% else %}
-                <form method="post" class="d-inline">
-                    {% csrf_token %}
-                    <input type="hidden" name="booking_id" value="{{ booking.id }}">
-                    <button type="submit" class="r_btn">Request Refund</button><br>
-                </form>
+                <p>No bookings found.</p>
             {% endif %}
-        </div>
-        <br>
-    {% endfor %}
-
-{% else %}
-
-    <p>There are currently no booked events...</p>
-
-{% endif %}
+        {% else %}
+            <p>You are not logged in. Please log in to view your events.</p>
+        {% endif %}
+    </div>
 
  <!-- This div structures the footer of the page -->
 

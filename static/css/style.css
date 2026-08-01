@@ -91,25 +91,38 @@
 
 /*Request Refund Page - Aidas Kibas*/
 
-#r_div{
-    border: 2px solid black;
+#r_display{
+    border: 1px solid black;
     border-radius: 15px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.r_btn{
-    color: rgb(250, 250, 250);
-    background-color: rgb(224, 0, 0);
-    border: 1px solid rgb(251, 249, 255);
-    border-radius: 10px;
+.cancel-btn {
+    color: white;
+    background-color: rgb(199, 10, 10);
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 15px;
     padding: 5px 10px;
 }
 
-.r_btn:hover {
-    color: rgb(224, 0, 0);
-    background-color: rgb(254, 254, 254);
-    border: 1px solid rgb(224, 0, 0);
+.cancel-btn:hover {
+    color: rgb(199, 10, 10);
+    background-color: white;
+    border: 1px solid rgb(199, 10, 10);
+}
+
+#remove-btn {
+    color: white;
+    background-color: rgb(199, 10, 10);
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 5px 10px;
+}
+
+#remove-btn:hover {
+    color: rgb(199, 10, 10);
+    background-color: white;
+    border: 1px solid rgb(199, 10, 10);
 }
