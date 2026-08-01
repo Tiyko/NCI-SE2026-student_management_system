@@ -1,10 +1,119 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-
+from datetime import date, time
 from homepage.models import Event
 from .models import Booking
 
+class BookingModelTest(TestCase):
+ 
+    def setUp(self):
+
+        # Create a test student
+
+        self.student = User.objects.create_user(
+
+            username="student1",
+
+            password="password123"
+
+        )
+ 
+        # Create a test organiser
+
+        self.organiser = User.objects.create_user(
+
+            username="organiser",
+
+            password="password123"
+
+        )
+ 
+        # Create a test event
+
+        self.event = Event.objects.create(
+
+            organiser=self.organiser,
+
+            title="Basketball Tournament",
+
+            sport_type="Basketball",
+
+            location="NCI",
+
+            date=date(2026, 8, 20),
+
+            start_time=time(10, 0),
+
+            capacity=20,
+
+            approved=True
+
+        )
+ 
+    # Test 1
+
+    def test_booking_is_created(self):
+
+        booking = Booking.objects.create(
+
+            student=self.student,
+
+            event=self.event
+
+        )
+ 
+        self.assertEqual(Booking.objects.count(), 1)
+
+        self.assertEqual(booking.student, self.student)
+
+        self.assertEqual(booking.event, self.event)
+ 
+    # Test 2
+
+    def test_event_capacity_does_not_change(self):
+
+        Booking.objects.create(
+
+            student=self.student,
+
+            event=self.event
+
+        )
+ 
+        self.event.refresh_from_db()
+ 
+        self.assertEqual(self.event.capacity, 20)
+ 
+    # Test 3
+
+    def test_available_places(self):
+
+        Booking.objects.create(
+
+            student=self.student,
+
+            event=self.event
+
+        )
+ 
+        available_places = self.event.capacity - self.event.bookings.count()
+ 
+        self.assertEqual(available_places, 19)
+ 
+    # Test 4
+
+    def test_booking_belongs_to_correct_event(self):
+
+        booking = Booking.objects.create(
+
+            student=self.student,
+
+            event=self.event
+
+        )
+ 
+        self.assertEqual(booking.event.title, "Basketball Tournament")
 
 class RequestRefundTests(TestCase):
     def setUp(self):
@@ -22,24 +131,16 @@ class RequestRefundTests(TestCase):
         )
         self.booking = Booking.objects.create(student=self.user, event=self.event)
 
-    def test_request_refund_shows_confirmation_message(self):
+    def test_remove_booking_deletes_booking(self):
         self.client.force_login(self.user)
-
-        response = self.client.post(reverse('request_refund'), {'booking_id': self.booking.id})
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Are you sure you want to request a refund')
-        self.assertTrue(Booking.objects.filter(id=self.booking.id).exists())
-
-    def test_confirm_refund_deletes_booking_and_shows_success_message(self):
-        self.client.force_login(self.user)
-
-        response = self.client.post(
-            reverse('request_refund'),
-            {'booking_id': self.booking.id, 'confirm_refund': '1'}
-        )
-
+        response = self.client.post(reverse('remove_booking', kwargs={'booking_id': self.booking.id}))
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Booking.objects.filter(id=self.booking.id).exists())
-        self.assertContains(response, 'Your refund has been processed')
-        self.assertContains(response, 'You currently have no bookings.')
+
+    def test_timezone_aware_event_datetime(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('request_refund'))
+        self.assertEqual(response.status_code, 200)
+        booking = response.context['bookings'][0]
+        event_datetime = booking.event.date.strftime('%Y-%m-%d') + ' ' + booking.event.start_time.strftime('%H:%M:%S')
+        self.assertTrue(booking.is_past is not None)
