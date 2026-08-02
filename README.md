@@ -13,12 +13,10 @@ This application is only a prototype and does not include major functions such a
 ## Table of Contents
  
 - [Introduction](#introduction)
-- [User Experience](#user-experience)
     - [Project Goal](#project-goal)
     - [User Stories](#user-stories)
     - [Scope](#scope)
     - [Agile Methodology](#agile-methodology)
-- [Design](#design)
     - [Use Case Diagram](#use-case-diagram)
     - [Database Schema](#database-schema)
 - [Features](#features)
@@ -27,18 +25,15 @@ This application is only a prototype and does not include major functions such a
 - [Technologies Used](#technologies-used)
 - [Python Packages](#python-packages)
 - [Deployment](#deployment)
+- [Launching the Project](#Launch-Project)
     - [Docker Setup](#docker-setup)
-    - [Database Hosting (Neon)](#database-hosting-neon)
     - [Fork Repository](#to-fork-this-repository)
     - [Cloning](#cloning-this-project)
 - [Credits](#credits)
 - [Acknowledgements](#acknowledgements)
  
 <br>
- 
-## User Experience
-<br>
- 
+
 ### Project Goal
  
 The goal of the student event management system is to simplify event organisation and communication between organisers and students attending the events. Those who have the app can browse upcoming events and book their place. The app also aims to connect differet communities of students together.
@@ -95,11 +90,7 @@ User Profile
  
 The development of the Student Event Management System follows an agile methodology approach using weekly sprint cycles. Each sprint focuses on delivering specific features drawn from the product backlog list, tracked through Jira with a rotating Scrum Master each sprint. All user stories, sprint backlogs, and progress can be accessed via our Jira board [here](https://aidaskibas17.atlassian.net/jira/software/projects/SEPNI/boards/34/backlog).
  
-Our GitHub repository is linked to Jira so that branches, commits, and pull requests are tracked directly against their corresponding Jira issue.
- 
 <br>
- 
-## Design
  
 ### Use Case Diagram
  
@@ -144,7 +135,7 @@ This project requires black and white box testing - with external functionality 
  
 - Python
 - Django
-- PostgreSQL (hosted on Neon)
+- sqlite
 - Docker & Docker Compose
 - django-allauth (authentication)
 - Bootstrap 5 (via django-crispy-forms)
@@ -164,6 +155,27 @@ This project requires black and white box testing - with external functionality 
 - gunicorn
  
 <br>
+
+### Launching the Project
+
+Since our project uses docker, the user who will attempt to launch the project requires to follow these steps:
+
+1.	Install Docker Desktop 
+2.	Open Docker Desktop and keep it running on your device
+3.	Install and Open Visual Studio Code (preferably)
+4.	Open a new terminal in VSCODE
+5.	Copy the URL from the GitHub Repository
+6.	Type git clone (repository url) into the terminal
+7.	Type cd (Project Repository Folder) – where the project lives
+8.	Type git pull into the terminal
+9.	Ensure there are no containers live in docker – if so delete/kill them
+10.	Type docker compose down into the terminal (optional for first time build)
+11.	Type docker compose up --build into the terminal
+12.	Wait for docker to stop building
+13.	Go to your web browser
+14.	In the URL type http://localhost:8080/
+15.	View the Project
+
  
 ### Docker Setup
  
@@ -175,10 +187,6 @@ This project runs inside Docker for consistent environments across all team memb
 4. Run migrations: `docker compose exec web python manage.py migrate`.
 5. Create a superuser: `docker compose exec web python manage.py createsuperuser`.
 6. Visit `http://localhost:8080` to view the running application.
- 
-### Database Hosting (Neon)
- 
-The project's PostgreSQL database is hosted for free on [Neon](Neon — Postgres backends for apps and agents). All team members connect to the same shared database via a `DATABASE_URL` environment variable, kept out of version control via `.gitignore`.
  
 ### To Fork This Repository
  
