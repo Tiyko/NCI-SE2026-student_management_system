@@ -3,6 +3,7 @@
 
 /*   Edited by:
      Ionut Ciobanu
+     Aidas Kibas
 */
 
 /* hide the auto-generated password helptext link in allauth login form */
@@ -33,23 +34,30 @@
 /*Navbar css - Aidas Kibas*/
 
 #nav-link {
-    background-color: rgb(254, 254, 254);
-    color: rgb(144, 71, 255);
-    font-size: 20px;
-    font-weight: bold;
-    margin-right: 30px;
-    padding: 8px;
-    text-align: center;
+    background-color: rgb(254, 254, 254); /* White background */
+    color: rgb(144, 71, 255); /* Purple text */
+    font-size: 20px; /* Font size */
+    font-weight: bold; /* Bold text */
+    margin-right: 30px; /* Moves the link to the right */
+    padding: 8px; /* Padding around the link */
+    text-align: center; /* Centers the text */
 }
 
 #profile-link {
-    background-color: rgb(254, 254, 254);
-    color: rgb(144, 71, 255);
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
+    background-color: rgb(254, 254, 254); /* White background */
+    color: rgb(144, 71, 255); /* Purple text */
+    font-size: 20px; /* Font size */
+    font-weight: bold; /* Bold text */
+    text-align: center; /* Centers the text */
 }
 
+/*Events page css - Aidas Kibas*/
+
+#e_head{
+    color: rgb(144, 71, 255);
+    text-decoration: bold; /* Bold text */
+    padding-bottom: 10px;
+}
 
 /*Homepage css - Aidas Kibas*/
 
@@ -60,11 +68,11 @@
 
 #i_div1 {
     border: 2px solid black;
-    border-radius: 15px;
-    padding: 10px;
-    display: flex;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px; 
+    display: flex; /* Use flexbox for layout */
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-between; /* Space between the image and text */
 }
 
 #i_div2 {
@@ -86,17 +94,17 @@
 }
 
 #i_div3 img{
-    width: 630px;
+    width: 630px; /* Set the width of the image */
 }
 
 /*Request Refund Page - Aidas Kibas*/
 
 #r_display{
-    border: 1px solid black;
+    border: 1px solid black; /* Black border */
     border-radius: 15px;
     padding: 8px;
     margin-bottom: 10px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
 }
 
 .cancel-btn {

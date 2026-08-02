@@ -1,15 +1,23 @@
-{% extends "base.html" %}
-{% load static %}
+<!-- Request Refund Page - Aidas Kibas -->
+
+{% extends "base.html" %} 
+{% load static %} <!-- Load static files for CSS and Images-->
 
 {% block content %}
 
 <div class="container py-5">
 
-    <h1 id="h_head" display-2">Request Event Refund</h1>
+    <!-- Header for the page -->
+
+    <h1 id="h_head" display-2">Request Event Refund</h1> 
+
+    <!-- Lead text for the page -->
+
     <p class="lead">If you are unable to attend an event you have booked, you can request a refund at any time here.</p>
 
-    <hr class="my-5">
 </div>
+
+<!-- Informative text area for the page -->
 
 <div>
 
@@ -19,12 +27,17 @@
 
 <br><br>
 
+<!-- Display user information and bookings using if statements and loops to retrieve relevant information -->
+
 {% if request.user.is_authenticated %}
             <p class="lead">You are logged in as: <strong>{{ request.user.username }}</strong>.</p>
 
             {% if bookings %}
                 {% for booking in bookings %}
                     <div id="r_display">
+
+                        <!-- Display booking status and event details based on whether the event is past or upcoming -->
+
                         {% if booking.is_past %}
                             <p style="color: red;"><strong>Status:</strong> Past Event</p>
                             <p><strong>Event:</strong> {{ booking.event.title }}</p>
@@ -41,6 +54,8 @@
                             <p><strong>Time:</strong> {{ booking.event.start_time }}</p>
                         {% endif %}
                         
+                        <!-- Display buttons for removing or requesting a refund based on the booking status -->
+
                         {% if booking.is_past %}
                         <form method="post" action="{% url 'remove_booking' booking.id %}">
                             {% csrf_token %}

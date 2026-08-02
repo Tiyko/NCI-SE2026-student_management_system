@@ -6,7 +6,7 @@
 
 <div class="container mt-5">
 
-    <h2 class="mb-4">Available Events</h2>
+    <h1 id="e_head">Available Events</h1>
 
     {% if events %}
 
@@ -28,7 +28,7 @@
 
                     <p><strong>Capacity:</strong> {{ event.capacity }}</p>
                     
-                    <p><strong>Available Places:</strong> {{ event.available_places}} players</p>
+                    <p><strong>Available Places:</strong> {{ event.available_places}}</p>
 
                     <p><strong>Organiser:</strong> {{ event.organiser.username }}</p>
 

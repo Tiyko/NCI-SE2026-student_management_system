@@ -76,11 +76,34 @@ def booking_page(request, event_id):
 
 #Aidas Kibas - Refund request page
 
+# This function retrieves the bookings for the logged-in user and checks if each booking is for a past event. It then returns the bookings with an additional attribute is_past indicating whether the event has already occurred.
+
+def get_user_bookings(user):
+    bookings = Booking.objects.filter(
+        student=user
+    ).select_related("event").order_by("-booked_at")
+
+    for booking in bookings:
+        event_datetime = timezone.make_aware(
+            datetime.combine(
+                booking.event.date,
+                booking.event.start_time
+            )
+        )
+
+        booking.is_past = event_datetime < timezone.now()
+
+    return bookings
+
+# This function retrieves the bookings for the logged-in user and checks if each booking is for a past event. It then renders the request refund page with the user's bookings.
+
 def request_refund(request):
     bookings = []
 
     if request.user.is_authenticated:
-        bookings = Booking.objects.filter(student=request.user).select_related('event').order_by('-booked_at')
+        bookings = get_user_bookings(request.user)
+
+# Check if each booking is for a past event and set the is_past attribute accordingly
 
     for booking in bookings:
         event_datetime = datetime.combine(
@@ -97,6 +120,8 @@ def request_refund(request):
         "bookings": bookings,
     })
 
+# This function removes a booking for the logged-in user based on the provided booking ID. If the booking exists, it deletes it and displays a success message. If the booking does not exist, it displays an error message. After processing, it redirects the user to the request refund page.
+
 def remove_booking(request, booking_id):
     if request.user.is_authenticated:
         try:
@@ -106,11 +131,13 @@ def remove_booking(request, booking_id):
         except Booking.DoesNotExist:
             messages.error(request, "Booking not found.")
 
-    return request_refund(request) 
+    return redirect("request_refund")
+
+# This function handles the cancellation of a booking and processes refund requests. It checks if the user is logged in, retrieves the user's bookings, and handles POST requests to confirm refunds. If the user confirms the refund, the booking is deleted, and a success message is displayed. If the user does not confirm, a warning message is shown. The function then renders the request refund page with the user's bookings.
 
 @login_required
 def cancel_booking(request, booking_id):
-    bookings = Booking.objects.filter(student=request.user)
+    bookings = get_user_bookings(request.user)
 
     if request.method == "POST":
         booking_id = request.POST.get("booking_id")
@@ -122,7 +149,7 @@ def cancel_booking(request, booking_id):
 
             # Delete the booking
             booking.delete()
-            bookings = Booking.objects.filter(student=request.user)
+            bookings = get_user_bookings(request.user)
             messages.success(request, "Your refund has been processed.")
         elif booking:
             messages.warning(
