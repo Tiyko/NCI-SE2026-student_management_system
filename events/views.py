@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from homepage.models import Event
 
 # Events page (Nerijus Kmitas x24170232)
+@login_required
 def events(request):
     event_list = Event.objects.filter(approved=True)
 
