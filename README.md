@@ -1,7 +1,9 @@
 # Student Event Management System (NCI - ANI - Software Engineering)
  
 run " docker compose up --build " to compose image and then use link http://localhost:8080/ to view website
- 
+
+To use admin features, login as admin using these credentials: **Username**: Admin --- **Password**: Abcd1234!
+
 ## Introduction
  
 The student event management system is designed and created by the ANI group consisting of Aidas Kibas, Nerijus Kmitas, and Ionut Ciobanu. The core principal of the application is that the user can sign up, browse events, book an event they are interested in, and then attend the event without having to constantly communicate with somebody over the details of the event. Event organisers and admin can create and manage events.
@@ -175,6 +177,7 @@ Since our project uses docker, the user who will attempt to launch the project r
 13.	Go to your web browser
 14.	In the URL type http://localhost:8080/
 15.	View the Project
+16.	Sign up with your own details or login as admin using these credentials: **Username**: Admin --- **Password**: Abcd1234!
 
  
 ### Docker Setup
